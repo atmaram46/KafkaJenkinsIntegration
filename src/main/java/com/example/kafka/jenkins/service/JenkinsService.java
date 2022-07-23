@@ -1,7 +1,10 @@
 package com.example.kafka.jenkins.service;
 
+import com.example.kafka.jenkins.Test.KafkaDto;
 import com.example.kafka.jenkins.config.JenkinsParameters;
+import com.example.kafka.jenkins.producer.KafkaPublisher;
 import com.example.kafka.jenkins.utils.APICall;
+import com.example.kafka.jenkins.utils.KafkaDataTransformation;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +21,31 @@ public class JenkinsService {
     @Autowired
     private APICall apiCall;
 
-    public String invokeJenkinsCall() {
-        String result = "";
-        Response response = apiCall.sendDataToRequestedUrl(jParams.getJenkinsUrl(), generateRequetHeader(), generateRequestBody());
+    @Autowired
+    private KafkaDataTransformation kDTras;
 
-        return result;
+    @Autowired
+    private KafkaPublisher kafkaPub;
+
+    public String invokeJenkinsCall() {
+        Response response = apiCall.sendDataToRequestedUrl(jParams.getJenkinsUrl(), generateRequetHeader(), generateRequestBody());
+        return callKafka(response);
     }
 
+    private String callKafka(Response response) {
+        KafkaDto data = transformForKafka(response);
+        try {
+            kafkaPub.publishMessage(data);
+        } catch (Exception ex) {
+            System.out.println("Error while Publishing Message:" + ex.getMessage());
+            return "Failure";
+        }
+        return "Success";
+    }
 
+    private KafkaDto transformForKafka(Response response) {
+        return kDTras.generateKafkaObject(response);
+    }
 
     private Map<String, String> generateRequetHeader() {
         Map<String, String> headerMap = new HashMap<>();
