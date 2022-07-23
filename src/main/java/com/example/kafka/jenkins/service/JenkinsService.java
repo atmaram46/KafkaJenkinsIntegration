@@ -32,6 +32,13 @@ public class JenkinsService {
         return callKafka(response);
     }
 
+//    public JenkinsParameters createJParams() {
+//        JenkinsParameters jparamNew = new JenkinsParameters("asdasd", "asdasd", "asasd");
+////        jparamNew.setJenkinsUrl("");
+//
+//        return jparamNew;
+//    }
+
     private String callKafka(Response response) {
         KafkaDto data = transformForKafka(response);
         try {
@@ -49,7 +56,8 @@ public class JenkinsService {
 
     private Map<String, String> generateRequetHeader() {
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("", "");
+        headerMap.put("UserName", "Joyce");
+        headerMap.put("Password", "abc@123");
         return headerMap;
     }
 

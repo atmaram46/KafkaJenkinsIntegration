@@ -34,6 +34,7 @@ public class ProducerConfiguration {
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
         props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, protocolName);
         props.put(SslConfigs.DEFAULT_SSL_ENABLED_PROTOCOLS, protocolVersion);
+//        props.put(SslConfigs.);
         return new DefaultKafkaProducerFactory(props);
     }
 

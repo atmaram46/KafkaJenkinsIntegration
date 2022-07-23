@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/v1/invoke")
+@RequestMapping(value = "/invoke")
 public class RequestController {
 
     @Autowired
@@ -19,5 +19,10 @@ public class RequestController {
     public ResponseEntity callJenkinsJob() {
         String response = jenkinsService.invokeJenkinsCall();
         return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/health")
+    public String getHealth() {
+        return "Success";
     }
 }
